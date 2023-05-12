@@ -1,0 +1,57 @@
+---
+project_info:
+  user_id: roboflow
+  project_id: safety_dataset
+  tags:
+    - "model with no augmentations"
+
+data:
+  datasets:
+    - name: Safety Test Set
+      batch_size: 5
+      automatic_metadata_data_fraction: 0.5
+
+tests:
+  model_performance:
+    params:
+      target_metric_value: 0.3
+      max_debug_images: 11
+    tests:
+      - metric: MAP
+      - metric: Precision
+      - metric: Recall
+  model_robustness:
+    params:
+      min_confidence: 0.3
+      score_strictness: 0.75
+      target_fraction_affected_samples: 0.05
+    tests:
+      - kind: CompressImage
+      - kind: Brightness
+      - kind: ChannelShuffle
+      - kind: ColorJitter
+      - kind: Contrast
+      - kind: Equalize
+      - kind: Gamma
+      - kind: GaussianBlur
+      - kind: GaussianNoise
+      - kind: Glare
+      - kind: Grayscale
+      - kind: HorizontalFlip
+      - kind: HueSaturationValue
+      - kind: IsoNoise
+      - kind: MotionBlur
+      - kind: PackageLoss
+      - kind: Perspective
+      - kind: RandomCrop
+      - kind: RGBShift
+      - kind: Rotation
+      - kind: Sepia
+      - kind: VerticalFlip
+
+  clustering:
+    params:
+      min_performance_drop: 0.05
+      metadata_timeout_seconds: 60
+    tests:
+      - metric: MAP
