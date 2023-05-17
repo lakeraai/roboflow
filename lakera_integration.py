@@ -23,11 +23,21 @@ from lakera import (
 from roboflow import Roboflow
 
 
+#Input your Roboflow API key
+ROBOFLOW_API_KEY = ""
+# Name of your public Roboflow project
+ROBOFLOW_PROJECT = "site-safety-lk"
+# Model version to use
+ROBOFLOW_MODEL_VERSION = 1
+# Path to your Roboflow dataset.
+PATH_TO_DATASET = "safety"
+
+
 class RoboflowDataset(DataMapper):
     def __init__(self, options: RunnerOptions):
         self.options = options
-        self.path_to_dataset = "safety/test"
-        with open("safety/data.yaml") as f:
+        self.path_to_dataset = f"{PATH_TO_DATASET}/test"
+        with open(f"{PATH_TO_DATASET}/data.yaml") as f:
             names = yaml.safe_load(f)["names"]
         self.id_to_label = {i: name for i, name in enumerate(names)}
 
@@ -70,10 +80,9 @@ class RoboflowDataset(DataMapper):
 class RoboflowPredictorAPI(Predictor):
     def __init__(self, options: RunnerOptions):
         self.options = options
-        # Here, specify your own Roboflow API key.
-        self.rf = Roboflow(api_key="your_api_key")
-        project = self.rf.workspace().project("site-safety-lk")
-        self.model = project.version(1).model
+        self.rf = Roboflow(api_key=ROBOFLOW_API_KEY)
+        project = self.rf.workspace().project(ROBOFLOW_PROJECT)
+        self.model = project.version(ROBOFLOW_MODEL_VERSION).model
 
     def predict(self, batch: Batch) -> Batch:
         """Makes predictions on an input batch of images."""
